@@ -1,5 +1,7 @@
 Autotagger (python3 port)
 ==========
+WORK IN PROGRESS
+
 Attempt to port it to python3.
 Tag ``.mp3`` and ``.m4a`` audio files from iTunes data automatically.
 
@@ -31,7 +33,8 @@ Installation
 
 ::
 
-    pip install autotagger
+    Just throw setup.py and autotagger.py to python 3 folder
+   
 
 
 Usage
