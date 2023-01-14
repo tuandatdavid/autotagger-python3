@@ -21,7 +21,7 @@ to make things simpler, I chose 8 essential and common fields pragmatically:
 By default, autotagger will only work with these 8 fields, anything not included will be
 ignored.
 
-autotagger is currently tested under Mac OS X with Python 2.7.10, if you find anything wrong
+autotagger is currently tested under Mac OS X with Python 2.7.10 (so it's not working anymore on python3), if you find anything wrong
 with this program, feel free to submit an issue.
 
 TODO:
@@ -33,8 +33,9 @@ Installation
 
 ::
 
-git clone
+git clone https://github.com/tuandatdavid/autotagger-python3.git
    
+And you will find source folder in home directory. Copy and paste setup.py and autotagger.py to python3 folder
 
 
 Usage
