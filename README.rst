@@ -33,7 +33,7 @@ Installation
 
 ::
 
-    Just throw setup.py and autotagger.py to python 3 folder
+git clone
    
 
 
