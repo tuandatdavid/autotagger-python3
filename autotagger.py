@@ -196,7 +196,7 @@ def generate_id(track_number, disc_number):
 
 def to_unicode(s):
     if isinstance(s, str):
-        return s.decode('utf8')
+        return s
     else:
         return unicode(s)
 
@@ -419,7 +419,7 @@ def main():
   By ID:
     autotagger -i 251480659
   By URL:
-    autotagger --url https://itunes.apple.com/us/album/schole-compilation-vol.-1/id251480659
+    autotagger --url https://music.apple.com/cz/album/sunroof/1620952862?i=1620953051&l=cs
   Pipe file names:
     find . -type f -name '*.mp3' -mtime -5m | autotagger -i 251480659 -p
 """
