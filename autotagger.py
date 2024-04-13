@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from __future__ import print_function
+
 
 import re
 import os
@@ -120,7 +120,7 @@ class Song(object):
         self.mutagen_factory = SUPPORT_EXTS[ext]
         self.mutagen_obj = self.mutagen_factory(filepath)
         self.key_map = Song.MUTAGEN_KEY_MAPS[ext]
-        self.reversed_key_map = {v: k for k, v in self.key_map.iteritems()}
+        self.reversed_key_map = {v: k for k, v in self.key_map.items()}
 
         #logger.debug('mutagen obj: %s', self.mutagen_obj)
 
@@ -143,7 +143,7 @@ class Song(object):
         return None
 
     def update_tags(self, tags, clear_others=False):
-        logger.info(u'Tag song: %s', self.filename)
+        logger.info('Tag song: %s', self.filename)
         logger.debug('with tags: %s' % tags)
 
         if clear_others:
@@ -152,7 +152,7 @@ class Song(object):
             # Create new
             self.mutagen_obj = self.mutagen_factory(self.filepath)
 
-        for k, v in tags.iteritems():
+        for k, v in tags.items():
             mutagen_key = self.key_map[k]
             if v is None:
                 if mutagen_key in self.mutagen_obj:
@@ -169,14 +169,14 @@ class Song(object):
         return str(self)
 
     def __unicode__(self):
-        return u'<Song: {}>'.format(self.filename)
+        return '<Song: {}>'.format(self.filename)
 
     def __str__(self):
-        return unicode(self).encode('utf8')
+        return str(self).encode('utf8')
 
 
 def slash_first_item(s):
-    if isinstance(s, basestring):
+    if isinstance(s, str):
         sp = s.split('/')
         if len(sp) > 1:
             return sp[0]
@@ -198,11 +198,11 @@ def to_unicode(s):
     if isinstance(s, str):
         return s
     else:
-        return unicode(s)
+        return str(s)
 
 
 def to_str(s):
-    if isinstance(s, unicode):
+    if isinstance(s, str):
         return s.encode('utf8')
     else:
         return str(s)
@@ -231,7 +231,7 @@ def fetch_album_songs(album_id, only_songs=True, context=GLOBAL_CONTEXT):
 
 
 def format_song_data(origin):
-    d = {k: origin.get(v) for k, v in ITUNES_API_KEY_MAP.iteritems()}
+    d = {k: origin.get(v) for k, v in ITUNES_API_KEY_MAP.items()}
 
     d['track_number'] = '{}/{}'.format(d['track_number'], origin['trackCount'])
 
@@ -265,14 +265,14 @@ def tag_songs(songs, album_id, clear_others=False, need_confirm=True):
         _id = generate_id(song_data['track_number'], song_data['disc_number'])
         songs_data_col[_id] = song_data
 
-    logger.debug('formatted song data [0]: %s', songs_data_col.values()[0])
+    logger.debug('formatted song data [0]: %s', list(songs_data_col.values())[0])
 
     # Prepare arguments
     args_tuples = []
     preview_tuples = []
     unmatched_count = 0
     songs_data_col_stack = dict(songs_data_col)
-    for id, song in songs_col.iteritems():
+    for id, song in songs_col.items():
         song_data = songs_data_col_stack.pop(id, None)
         if song_data is None:
             # Unmatched song data
@@ -291,20 +291,20 @@ def tag_songs(songs, album_id, clear_others=False, need_confirm=True):
     # Unmatched song file
     preview_tuples.extend([
         ('<no song>', False, _get_title(i), _get_track_number(i))
-        for i in songs_data_col_stack.itervalues()
+        for i in songs_data_col_stack.values()
     ])
     unmatched_count += len(songs_data_col_stack)
-    preview = u'\n'.join(
-        u'{}  {}  {}  {}'.format(
+    preview = '\n'.join(
+        '{}  {}  {}  {}'.format(
             _cell(i),
-            u'→' if is_good else u'✗',
+            '→' if is_good else '✗',
             _cell(j),
             k,
         ) for i, is_good, j, k in preview_tuples)
 
     # Show preview and stats
     print('\nPreview:')
-    good_count = len(filter(lambda x: x[1], preview_tuples))
+    good_count = len([x for x in preview_tuples if x[1]])
     stat_str = '{} input, {} could be processed, {} unmatched, {}'.format(
         len(songs_col), good_count, unmatched_count,
         'better to recheck :/' if unmatched_count else 'looks good :)')
@@ -316,7 +316,7 @@ def tag_songs(songs, album_id, clear_others=False, need_confirm=True):
         # Fix stdin being redirected when using pipeline:
         # http://stackoverflow.com/a/7141375/596206
         sys.stdin = open('/dev/tty')
-        iv = raw_input('Continue? y/N')
+        iv = input('Continue? y/N')
         if iv == 'N':
             return
 
@@ -332,9 +332,9 @@ def _cell(s, limit=35):
     if width > limit:
         align_pos = - limit + 4
         s = s[align_pos:]
-        return u'…' + u' ' * (limit - unicode_width(s)) + s
+        return '…' + ' ' * (limit - unicode_width(s)) + s
     else:
-        return u' ' + u' ' * (limit - unicode_width(s)) + s
+        return ' ' + ' ' * (limit - unicode_width(s)) + s
 
 
 def unicode_width(string):
@@ -356,14 +356,14 @@ def unicode_width(string):
 
 def _get_title(o):
     if o is None:
-        return u''
+        return ''
     else:
         return o.get('title')
 
 
 def _get_track_number(o):
     if o is None:
-        return u'?'
+        return '?'
     else:
         return o.get('track_number')
 
@@ -495,16 +495,16 @@ def main():
         print('Paste song file names here:\n')
         songs = []
         while True:
-            i = raw_input()
+            i = input()
             if i:
                 songs.append(i)
             else:
-                c = raw_input('Stop adding songs and start tagging? (enter or y to confirm, N to continue adding.) ')
+                c = input('Stop adding songs and start tagging? (enter or y to confirm, N to continue adding.) ')
                 if c == '' or c == 'y':
                     print()
                     break
 
-    songs = filter(None, songs)
+    songs = [_f for _f in songs if _f]
     logger.debug('input songs:%s', songs)
 
     tag_songs(songs, album_id, clear_others=args.clear_others)
